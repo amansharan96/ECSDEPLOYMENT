@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-web-app
+  labels:
+    app: login-web-app
+spec:
+  replicas: 3 # You can adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: login-web-app
+  template:
+    metadata:
+      labels:
+        app: login-web-app
+    spec:
+      containers:
+      - name: login-web-app
+        image: public.ecr.aws/z5v4e8o6/jenkins-repo:latest # Replace this with your Docker image and tag
+        ports:
+        - containerPort: 8085 # The port your application listens on inside the container
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-web-app-service
+spec:
+  selector:
+    app: login-web-app
+  ports:
+    - protocol: TCP
+      port: 80 # The port exposed by the service
+      targetPort: 8085 # The port your application listens on inside the container
+  type: LoadBalancer
+          
